@@ -16,47 +16,42 @@
 
 package org.keycloak.quickstart.springboot;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
+import net.rossillo.spring.web.mvc.CacheControlHandlerInterceptor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import net.rossillo.spring.web.mvc.CacheControlHandlerInterceptor;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
 @SpringBootApplication
 public class ProductApplication {
 
-	private static Log logger = LogFactory.getLog(ProductApplication.class);
+    private static Log logger = LogFactory.getLog(ProductApplication.class);
 
-	@Bean
-	protected ServletContextListener listener() {
-		return new ServletContextListener() {
+    @Bean
+    protected ServletContextListener listener() {
+        return new ServletContextListener() {
 
-			@Override
-			public void contextInitialized(ServletContextEvent sce) {
-				logger.info("ServletContext initialized");
-			}
+            public void contextInitialized(ServletContextEvent sce) {
+                logger.info("ServletContext initialized");
+            }
 
-			@Override
-			public void contextDestroyed(ServletContextEvent sce) {
-				logger.info("ServletContext destroyed");
-			}
+            public void contextDestroyed(ServletContextEvent sce) {
+                logger.info("ServletContext destroyed");
+            }
 
-		};
-	}
+        };
+    }
 
-	public static void main(String[] args) throws Exception {
-		SpringApplication.run(ProductApplication.class, args);
-	}
-        
-        @Bean
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(ProductApplication.class, args);
+    }
+
+    @Bean
     public CacheControlHandlerInterceptor cacheControlHandlerInterceptor() {
         return new CacheControlHandlerInterceptor();
     }
-
-
 }

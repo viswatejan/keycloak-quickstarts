@@ -197,6 +197,14 @@
         <module>app-authz-jee-vanilla</module>
         <module>app-authz-uma-photoz</module>
         <module>app-authz-photoz</module>
+        <module>app-springboot</module>
+        <module>app-authz-rest-employee</module>
+        <module>app-authz-rest-springboot</module>
+        <module>app-authz-spring-security</module>
+        <module>app-authz-springboot</module>
+        <module>service-springboot-rest</module>
+        <module>user-storage-jpa</module>
+        <module>user-storage-simple</module>
     </modules>
 
     <repositories>

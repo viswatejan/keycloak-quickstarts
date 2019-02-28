@@ -12,7 +12,7 @@
 </header>
 
 <h1>Product Page</h1>
-<p>User ${principal.name} made this request.</p>
+<p>User ${name} made this request.</p>
 
 <h2>Products</h2>
 <ul>

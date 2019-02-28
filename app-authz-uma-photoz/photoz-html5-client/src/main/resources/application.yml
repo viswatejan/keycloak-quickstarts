@@ -1,0 +1,8 @@
+keycloak:
+    auth-server-url: https://keycloakpoc-test.jbhunt.com/auth
+
+server:
+    connection-timeout: PT5S
+    port: 8080
+    servlet:
+        context-path: /photoz-html5-client

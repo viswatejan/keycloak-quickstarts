@@ -1,0 +1,15 @@
+keycloak:
+    auth-server-url: https://keycloakpoc-test.jbhunt.com/auth
+    public-client: true
+    realm: master
+    resource: product-app
+    ssl-required: external
+product:
+    service:
+        url: http://localhost:8081/products
+server:
+    connection-timeout: PT5S
+    port: 8080
+spring:
+    freemarker:
+        cache: false

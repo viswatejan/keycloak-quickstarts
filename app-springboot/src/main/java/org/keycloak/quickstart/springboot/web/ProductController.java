@@ -16,50 +16,60 @@
 
 package org.keycloak.quickstart.springboot.web;
 
-import java.security.Principal;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import net.rossillo.spring.web.mvc.CacheControl;
 import net.rossillo.spring.web.mvc.CachePolicy;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
+import org.keycloak.adapters.springsecurity.token.KeycloakAuthenticationToken;
 import org.keycloak.common.util.KeycloakUriBuilder;
 import org.keycloak.constants.ServiceUrlConstants;
 import org.keycloak.quickstart.springboot.service.ProductService;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
+
 
 @Controller
 @CacheControl(policy = CachePolicy.NO_CACHE)
+@EnableConfigurationProperties(KeycloakSpringBootProperties.class)
 public class ProductController {
 
-	@Autowired
-	private ProductService productService;
-        
-        private @Autowired HttpServletRequest request;
+    @Autowired
+    private ProductService productService;
 
-	@RequestMapping(value = "/products", method = RequestMethod.GET)
-	public String handleCustomersRequest(Principal principal, Model model) {
-			model.addAttribute("products", productService.getProducts());
-			model.addAttribute("principal",  principal);
-                        String logoutUri = KeycloakUriBuilder.fromUri("http://localhost:8180/auth").path(ServiceUrlConstants.TOKEN_SERVICE_LOGOUT_PATH)
-            .queryParam("redirect_uri", "http://localhost:8080/products").build("quickstart").toString();
-                        model.addAttribute("logout",  logoutUri);
-			return "products";
-	}
-        
-        @RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public String handleLogoutt() throws ServletException {
-            request.logout();
-            return "landing";
-        }
-        
-        @RequestMapping(value = "/", method = RequestMethod.GET)
-	public String landing() throws ServletException {
-            return "landing";
-        }
+    @Autowired
+    private HttpServletRequest request;
+    
+    @Autowired
+    private KeycloakSpringBootProperties keycloakProperties;
+
+    @RequestMapping(value = "/products", method = RequestMethod.GET)
+    public String handleCustomersRequest(Principal principal, Model model) {
+        model.addAttribute("products", productService.getProducts());
+        model.addAttribute("name", ((KeycloakPrincipal)((KeycloakAuthenticationToken) principal).getPrincipal()).getKeycloakSecurityContext().getIdToken().getName());
+        String logoutUri = KeycloakUriBuilder.fromUri(keycloakProperties.getAuthServerUrl()).path(ServiceUrlConstants.TOKEN_SERVICE_LOGOUT_PATH)
+                .queryParam("redirect_uri", "http://localhost:8080/").build(keycloakProperties.getRealm()).toString();
+        model.addAttribute("logout", logoutUri);
+        return "products";
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public String handleLogout() throws ServletException {
+        request.logout();
+        return "landing";
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String landing() throws ServletException {
+        return "landing";
+    }
 
 }

@@ -1,0 +1,17 @@
+keycloak:
+    auth-server-url: https://keycloakpoc-test.jbhunt.com/auth
+    bearer-only: true
+    public-client: true
+    realm: master
+    resource: product-service
+    securityConstraints:
+    -   authRoles:
+        - user
+        securityCollections:
+        -   name: protected resource
+            patterns:
+            - /products
+            - /products/
+    ssl-required: external
+server:
+    port: 8081

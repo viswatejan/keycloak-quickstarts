@@ -1,3 +1,5 @@
+<#import "/spring.ftl" as spring />
+<#assign xhtmlCompliant = true in spring>
 <!doctype html>
 <html lang="en">
 
@@ -6,15 +8,15 @@
     <title>Photoz HTML5 Client</title>
 
     <!-- Load AngularJS -->
-    <script src="lib/angular/angular.min.js"></script>
-    <script src="lib/angular/angular-resource.min.js"></script>
-    <script src="lib/angular/angular-route.min.js"></script>
-    <script src="lib/jwt-decode.min.js"></script>
+    <script src="<@spring.url '/lib/angular/angular.min.js'/>"></script>
+    <script src="<@spring.url '/lib/angular/angular-resource.min.js'/>"></script>
+    <script src="<@spring.url '/lib/angular/angular-route.min.js'/>"></script>
+    <script src="<@spring.url '/lib/jwt-decode.min.js'/>"></script>
 
-    <script src="http://localhost:8180/auth/js/keycloak.js"></script>
-    <script src="http://localhost:8180/auth/js/keycloak-authz.js"></script>
-    <script src="js/identity.js" type="text/javascript"></script>
-    <script src="js/app.js" type="text/javascript"></script>
+    <script src="${keycloak_auth_server_url}/js/keycloak.js"></script>
+    <script src="${keycloak_auth_server_url}/js/keycloak-authz.js"></script>
+    <script src="<@spring.url '/js/identity.js'/>" type="text/javascript"></script>
+    <script src="<@spring.url '/js/app.js'/>" type="text/javascript"></script>
 </head>
 
 <body data-ng-controller="TokenCtrl">
