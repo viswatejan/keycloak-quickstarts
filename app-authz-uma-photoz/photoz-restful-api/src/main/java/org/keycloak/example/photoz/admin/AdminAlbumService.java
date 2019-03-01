@@ -17,31 +17,30 @@
  */
 package org.keycloak.example.photoz.admin;
 
+import org.keycloak.example.photoz.entity.Album;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Response;
-
-import org.keycloak.example.photoz.entity.Album;
-
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Igor</a>
  */
-@Path("/admin/album")
+
+@RestController
+@RequestMapping("/admin/album")
 public class AdminAlbumService {
 
-    @Inject
+    @Autowired
     private EntityManager entityManager;
 
-    @GET
-    @Produces("application/json")
-    public Response findAll() {
+    @GetMapping
+    public HashMap<String, List<Album>> findAll() {
         HashMap<String, List<Album>> albums = new HashMap<String, List<Album>>();
         List<Album> result = this.entityManager.createQuery("from Album").getResultList();
 
@@ -56,6 +55,6 @@ public class AdminAlbumService {
             userAlbums.add(album);
         }
 
-        return Response.ok(albums).build();
+        return albums;
     }
 }

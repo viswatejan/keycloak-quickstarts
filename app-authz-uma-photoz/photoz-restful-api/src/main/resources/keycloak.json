@@ -1,6 +1,6 @@
 {
-  "realm": "photoz",
-  "auth-server-url": "http://localhost:8180/auth",
+  "realm": "master",
+  "auth-server-url": "https://keycloakpoc-test.jbhunt.com",
   "ssl-required": "external",
   "resource": "photoz-restful-api",
   "bearer-only" : true,

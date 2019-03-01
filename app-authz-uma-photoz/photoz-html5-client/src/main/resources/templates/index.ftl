@@ -7,6 +7,10 @@
     <meta charset="utf-8">
     <title>Photoz HTML5 Client</title>
 
+    <script>
+        window.photoz_restful_api_origin = '${photoz_restful_api_origin}';
+    </script>
+        
     <!-- Load AngularJS -->
     <script src="<@spring.url '/lib/angular/angular.min.js'/>"></script>
     <script src="<@spring.url '/lib/angular/angular-resource.min.js'/>"></script>

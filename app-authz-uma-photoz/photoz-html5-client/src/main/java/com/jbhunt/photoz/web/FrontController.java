@@ -17,8 +17,11 @@ public class FrontController {
     }
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String home(Model model, @Value("${keycloak.auth-server-url}") String keycloakAuthServerUrl) throws ServletException {
+    public String home(Model model, 
+                       @Value("${keycloak.auth-server-url}") String keycloakAuthServerUrl,
+                       @Value("${photoz-restful-api.origin}") String apiOrigin) throws ServletException {
         model.addAttribute("keycloak_auth_server_url", keycloakAuthServerUrl);
+        model.addAttribute("photoz_restful_api_origin", apiOrigin);
         return "index";
     }
 }
