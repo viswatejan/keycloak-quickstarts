@@ -18,11 +18,11 @@ spring:
 
 keycloak:
   auth-server-url: https://keycloakpoc-test.jbhunt.com/auth
+  realm: photoz
   bearer-only: true
+  resource: photoz-restful-api
   credentials:
     secret: secret
-  realm: master
-  resource: photoz-restful-api
   ssl-required: external
   policy-enforcer-config:
     paths:
@@ -35,11 +35,10 @@ keycloak:
       - method: GET
         scopes:
         - album:view
-    - name: Album Share Resource
+    - name: Album Resource
       path: /album/shares
       enforcement-mode: DISABLED
-    - name: User Profile Resource
-      path: /profile
+    - path: /profile
     - name: Admin Resources
       path: /admin/*
   securityConstraints:
@@ -49,14 +48,12 @@ keycloak:
     - name: All Resources
       patterns:
       - /*
-      - /**
   - authRoles:
     - admin
     securityCollections:
     - name: All Resources
       patterns:
       - /*
-      - /**
 
 server:
   port: 8081

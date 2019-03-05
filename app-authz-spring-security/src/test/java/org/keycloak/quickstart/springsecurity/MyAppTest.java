@@ -24,11 +24,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.keycloak.quickstart.springsecurity.web.MyApplication;
+import org.keycloak.quickstart.springsecurity.web.SpringSecurityWebApplication;
 import org.keycloak.test.TestsHelper;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,7 +40,7 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
  * @author <a href="mailto:psilva@redhat.com">Pedro Igor</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.DEFINED_PORT, classes = {MyApplication.class})
+@SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.DEFINED_PORT, classes = {SpringSecurityWebApplication.class})
 public class MyAppTest {
 
     private WebClient webClient = new WebClient(BrowserVersion.CHROME);

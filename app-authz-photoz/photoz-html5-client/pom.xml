@@ -29,22 +29,70 @@
     <name>Keycloak Quickstarts: Photoz HTML5 Client</name>
     <description>Photoz HTML5 Client</description>
 
+    <properties>
+        <springboot-version>2.0.3.RELEASE</springboot-version>
+        <httpclient.version>4.5.3</httpclient.version>
+        <spring-mvc-cache-control.version>1.1.1-RELEASE</spring-mvc-cache-control.version>
+        <spring-boot-starter-security.version>1.4.2.RELEASE</spring-boot-starter-security.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-parent</artifactId>
+                <version>${springboot-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.rossillo.mvc.cache</groupId>
+            <artifactId>spring-mvc-cache-control</artifactId>
+            <version>${spring-mvc-cache-control.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+    </dependencies>
+
     <build>
-        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.jboss.as.plugins</groupId>
-                <artifactId>jboss-as-maven-plugin</artifactId>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.wildfly.plugins</groupId>
-                <artifactId>wildfly-maven-plugin</artifactId>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>enforce-quickstart-realm-file-exist</id>
+                        <phase>validate</phase>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

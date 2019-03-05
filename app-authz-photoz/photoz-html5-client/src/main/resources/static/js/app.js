@@ -1,7 +1,7 @@
 var module = angular.module('photoz', ['ngRoute', 'ngResource']);
 
 var resourceServerId = 'photoz-restful-api';
-var apiUrl = window.location.origin + '/' + resourceServerId;
+var apiUrl = photoz_restful_api_origin + '/' + resourceServerId;
 
 angular.element(document).ready(function ($http) {
     var keycloak = new Keycloak('keycloak.json');

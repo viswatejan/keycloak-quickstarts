@@ -16,10 +16,10 @@
  */
 package org.keycloak.example.photoz.album;
 
+import org.keycloak.example.photoz.entity.Album;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.keycloak.example.photoz.entity.Album;
 
 public class SharedAlbum {
 

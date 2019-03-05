@@ -1,6 +1,6 @@
 {
   "realm": "spring-security-quickstart",
-  "auth-server-url": "http://localhost:8180/auth",
+  "auth-server-url": "https://keycloakpoc-test.jbhunt.com/auth",
   "ssl-required": "external",
   "resource": "app-authz-spring-security",
   "credentials": {

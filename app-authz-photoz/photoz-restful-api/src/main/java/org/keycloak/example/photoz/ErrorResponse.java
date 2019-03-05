@@ -1,32 +1,20 @@
 package org.keycloak.example.photoz;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author <a href="mailto:psilva@redhat.com">Pedro Igor</a>
  */
-public class ErrorResponse extends WebApplicationException {
+public class ErrorResponse extends RuntimeException {
 
-    private final Response.Status status;
+    private final HttpStatus status;
 
     public ErrorResponse(String message) {
-        this(message, Response.Status.INTERNAL_SERVER_ERROR);
+        this(message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    public ErrorResponse(String message, Response.Status status) {
-        super(message, status);
+    public ErrorResponse(String message, HttpStatus status) {
+        super(message);
         this.status = status;
-    }
-
-    @Override
-    public Response getResponse() {
-        Map<String, String> errorResponse = new HashMap<String, String>();
-
-        errorResponse.put("message", getMessage());
-
-        return Response.status(status).entity(errorResponse).build();
     }
 }

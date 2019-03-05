@@ -1,54 +1,43 @@
 package org.keycloak.example.photoz.album;
 
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.authorization.client.AuthzClient;
 import org.keycloak.authorization.client.ClientAuthorizationContext;
 import org.keycloak.authorization.client.resource.ProtectionResource;
 import org.keycloak.example.photoz.ErrorResponse;
 import org.keycloak.example.photoz.entity.Album;
-import org.keycloak.example.photoz.util.Transaction;
 import org.keycloak.representations.idm.authorization.PermissionTicketRepresentation;
 import org.keycloak.representations.idm.authorization.ResourceRepresentation;
 import org.keycloak.representations.idm.authorization.ScopeRepresentation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
-@Path("/album")
-@Transaction
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
+import java.security.Principal;
+import java.util.*;
+
+@RestController
+@RequestMapping("/album")
+@Transactional
 public class AlbumService {
 
     public static final String SCOPE_ALBUM_VIEW = "album:view";
     public static final String SCOPE_ALBUM_DELETE = "album:delete";
 
-    @Inject
+    @Autowired
     private EntityManager entityManager;
 
-    @Context
+    @Autowired
     private HttpServletRequest request;
 
-    @POST
-    @Consumes("application/json")
-    public Response create(Album newAlbum) {
+    @PostMapping
+    public Album create(Album newAlbum) {
         Principal userPrincipal = request.getUserPrincipal();
 
         newAlbum.setId(UUID.randomUUID().toString());
@@ -60,7 +49,7 @@ public class AlbumService {
         queryDuplicatedAlbum.setParameter("userId", userPrincipal.getName());
 
         if (!queryDuplicatedAlbum.getResultList().isEmpty()) {
-            throw new ErrorResponse("Name [" + newAlbum.getName() + "] already taken. Choose another one.", Status.CONFLICT);
+            throw new ErrorResponse("Name [" + newAlbum.getName() + "] already taken. Choose another one.", HttpStatus.CONFLICT);
         }
 
         try {
@@ -70,12 +59,11 @@ public class AlbumService {
             getAuthzClient().protection().resource().delete(newAlbum.getExternalId());
         }
 
-        return Response.ok(newAlbum).build();
+        return newAlbum;
     }
 
-    @Path("{id}")
-    @DELETE
-    public Response delete(@PathParam("id") String id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity delete(@RequestParam("id") String id) {
         Album album = this.entityManager.find(Album.class, id);
 
         try {
@@ -85,19 +73,18 @@ public class AlbumService {
             throw new RuntimeException("Could not delete album.", e);
         }
 
-        return Response.ok().build();
+        return ResponseEntity.ok().build();
     }
 
-    @GET
-    @Produces("application/json")
-    public Response findAll() {
-        return Response.ok(this.entityManager.createQuery("from Album where userId = :id").setParameter("id", request.getUserPrincipal().getName()).getResultList()).build();
+    @GetMapping
+    public List<Album> findAll() {
+        return this.entityManager
+                .createQuery("from Album where userId = :id")
+                .setParameter("id", request.getUserPrincipal().getName()).getResultList();
     }
 
-    @GET
-    @Path("/shares")
-    @Produces("application/json")
-    public Response findShares() {
+    @GetMapping("/shares")
+    public Collection<SharedAlbum> findShares() {
         List<PermissionTicketRepresentation> permissions = getAuthzClient().protection().permission().find(null, null, null, getKeycloakSecurityContext().getToken().getSubject(), true, true, null, null);
         Map<String, SharedAlbum> shares = new HashMap<String, SharedAlbum>();
 
@@ -114,20 +101,18 @@ public class AlbumService {
             }
         }
 
-        return Response.ok(shares.values()).build();
+        return shares.values();
     }
 
-    @GET
-    @Path("{id}")
-    @Produces("application/json")
-    public Response findById(@PathParam("id") String id) {
+    @GetMapping("/{id}")
+    public ResponseEntity findById(@PathParam("id") String id) {
         List result = this.entityManager.createQuery("from Album where id = :id").setParameter("id", id).getResultList();
 
         if (result.isEmpty()) {
-            return Response.status(Status.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return Response.ok(result.get(0)).build();
+        return ResponseEntity.ok(result.get(0));
     }
 
     private void createProtectedResource(Album album) {

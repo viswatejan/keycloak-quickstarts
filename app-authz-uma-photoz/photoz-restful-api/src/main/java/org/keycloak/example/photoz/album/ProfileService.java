@@ -34,7 +34,7 @@ import java.util.List;
 @RequestMapping("/profile")
 public class ProfileService {
 
-    private static final String PROFILE_VIEW = "urn:photoz.com:scopes:profile:view";
+    private static final String PROFILE_VIEW = "profile:view";
 
     @Autowired
     private EntityManager entityManager;
